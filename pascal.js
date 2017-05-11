@@ -63,16 +63,23 @@ var Interpreter = {
 	eval: function() {
 		this.currentToken = this.getNextToken();
 
-		let left = this.currentToken;
-		this.eat(INTEGER);
+		let left = "",
+				right = "";
+
+		while (this.currentToken.type !== PLUS) {
+			left += this.currentToken.value;
+			this.eat(INTEGER);
+		}
 
 		let op = this.currentToken;
 		this.eat(PLUS);
 
-		let right = this.currentToken;
-		this.eat(INTEGER);
+		while(this.currentToken.type !== EOF) {
+			right += this.currentToken.value;
+			this.eat(INTEGER);
+		}
 
-		let result = parseInt(left.value) + parseInt(right.value);
+		let result = parseInt(left) + parseInt(right);
 		return result;
 	}
 
@@ -86,7 +93,7 @@ function main() {
 		process.stdin.resume();
 		process.stdout.write(question);
 		process.stdin.once('data', function (data) {
-			callback(data.toString().substring(0, data.toString().length - 2));
+			callback(data.toString().substring(0, data.toString().length - 1));
 		});
 	}
 
